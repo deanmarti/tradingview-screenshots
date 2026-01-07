@@ -12,8 +12,8 @@ services:
     ports:
       - "2222:22"  # SSH port
     volumes:
-      - /home/pi/tradingview-screenshots/charts:/app/output          # Chart output
-      - /home/pi/tradingview-screenshots/archives:/app/archives      # Weekly zip archives
+      - /home/pi/tradingview-screenshot/charts:/home/pi/tradingview-screenshot/charts
+      - /home/pi/tradingview-screenshot/archives:/home/pi/tradingview-screenshot/archives
     environment:
       - ROOT_PASSWORD=${ROOT_PASSWORD:-changeme}
       - TZ=${TZ:-Europe/Berlin}

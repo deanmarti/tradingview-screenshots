@@ -183,21 +183,8 @@ def create_tradingview_chart(ticker_symbol, interval="1D", studies=None, output_
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_experimental_option('excludeSwitches', ['enable-logging', 'enable-automation'])
 
-    # Use system Chromium binary on Linux (Debian/Raspbian)
-    chromium_paths = ["/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/google-chrome"]
-    for path in chromium_paths:
-        if os.path.exists(path):
-            chrome_options.binary_location = path
-            break
-
     # Initialize the Chrome WebDriver (suppress service logs)
-    # Use system ChromeDriver path on Linux (Debian/Raspbian)
-    chromedriver_paths = ["/usr/bin/chromedriver", "/usr/lib/chromium/chromedriver"]
     service = Service(log_output=os.devnull)
-    for path in chromedriver_paths:
-        if os.path.exists(path):
-            service = Service(executable_path=path, log_output=os.devnull)
-            break
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     # Open the generated HTML file

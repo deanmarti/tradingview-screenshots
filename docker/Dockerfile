@@ -29,8 +29,8 @@ COPY docker/archive_charts.sh /app/
 RUN python3 -m venv /app/venv
 RUN /app/venv/bin/pip install --no-cache-dir -r requirements.txt
 
-# Create output and archive directories
-RUN mkdir -p /app/output /app/archives
+# Create output and archive directories (same path as host)
+RUN mkdir -p /home/pi/tradingview-screenshot/charts /home/pi/tradingview-screenshot/archives
 
 # Configure SSH
 RUN mkdir -p /var/run/sshd
@@ -39,8 +39,8 @@ RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/
 
 # Root password is set at runtime via entrypoint.sh using ROOT_PASSWORD env var
 
-# Create wrapper script for easy execution (default output to /app/output)
-RUN echo '#!/bin/bash\n/app/venv/bin/python /app/tradingview_screenshot.py -o /app/output "$@"' > /usr/local/bin/tradingview-screenshot \
+# Create wrapper script for easy execution
+RUN echo '#!/bin/bash\n/app/venv/bin/python /app/tradingview_screenshot.py -o /home/pi/tradingview-screenshot/charts "$@"' > /usr/local/bin/tradingview-screenshot \
     && chmod +x /usr/local/bin/tradingview-screenshot
 
 # Make archive script executable

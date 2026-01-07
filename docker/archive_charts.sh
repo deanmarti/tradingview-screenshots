@@ -1,8 +1,8 @@
 #!/bin/bash
 # Archive charts weekly - runs every Sunday at 23:30
 
-CHARTS_DIR="/app/output"
-ARCHIVES_DIR="/app/archives"
+CHARTS_DIR="/home/pi/tradingview-screenshot/charts"
+ARCHIVES_DIR="/home/pi/tradingview-screenshot/archives"
 DATE=$(date +%Y-%m-%d)
 ARCHIVE_NAME="charts_${DATE}.zip"
 
