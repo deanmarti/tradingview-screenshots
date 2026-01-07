@@ -33,7 +33,7 @@ RUN /app/venv/bin/pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/output /app/archives
 
 # Configure SSH
-RUN mkdir /var/run/sshd
+RUN mkdir -p /var/run/sshd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
