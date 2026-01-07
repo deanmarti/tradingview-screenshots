@@ -5,7 +5,7 @@
       "parameters": {
         "operation": "executeCommand",
         "command": "=tradingview-screenshot {{ $json.ticker }} -i {{ $json.interval || '1D' }} -s {{ $json.studies || 'MACD,RSI' }}",
-        "cwd": "/app"
+        "cwd": "/home/pi/tradingview-screenshot/charts"
       },
       "id": "ssh-execute-chart-indicators",
       "name": "Generate Chart with Indicators",
@@ -22,7 +22,7 @@
     {
       "parameters": {
         "operation": "download",
-        "path": "=/app/output/tradingview_{{ $json.interval || '1D' }}_chart_{{ $json.ticker.replace(':', '_') }}_indicators.png"
+        "path": "=/home/pi/tradingview-screenshot/charts/tradingview_{{ $json.interval || '1D' }}_chart_{{ $json.ticker.replace(':', '_') }}_indicators.png"
       },
       "id": "ssh-download-chart-indicators",
       "name": "Download Chart",
@@ -57,5 +57,5 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "notes": "## TradingView Chart Generator (With Indicators)\n\n### Input JSON:\n```json\n{\n  \"ticker\": \"NASDAQ:AAPL\",\n  \"interval\": \"4h\",\n  \"studies\": \"MACD,RSI\"\n}\n```\n\n### SSH Credentials:\n- Host: <raspi-ip>\n- Port: 2222\n- Username: root\n- Password: Home4Charts8115$\n\n### Intervals:\n- 15m, 1h, 4h, 1D, 1W\n\n### Available Studies:\n- MACD\n- RSI\n- DMI"
+  "notes": "## TradingView Chart Generator (With Indicators)\n\n### Input JSON:\n```json\n{\n  \"ticker\": \"NASDAQ:AAPL\",\n  \"interval\": \"4h\",\n  \"studies\": \"MACD,RSI\"\n}\n```\n\n### SSH Credentials:\n- Host: <raspi-ip>\n- Port: 2222\n- Username: root\n- Password: (set via ROOT_PASSWORD env var)\n\n### Intervals (case-insensitive):\n- 15m, 1h, 4h, 1D, 1W\n\n### Available Studies:\n- MACD, RSI, DMI, BB, VWAP, EMA, SMA, ATR, ADX, STOCH, CCI, MFI, OBV, ICHIMOKU\n- Any TradingView study name"
 }

@@ -4,8 +4,8 @@
     {
       "parameters": {
         "operation": "executeCommand",
-        "command": "=tradingview-screenshot {{ $json.ticker }} -i {{ $json.interval || '1D' }} -s \"\"",
-        "cwd": "/app"
+        "command": "=tradingview-screenshot {{ $json.ticker }} -i {{ $json.interval || '1D' }}",
+        "cwd": "/home/pi/tradingview-screenshot/charts"
       },
       "id": "ssh-execute-chart",
       "name": "Generate Chart",
@@ -22,7 +22,7 @@
     {
       "parameters": {
         "operation": "download",
-        "path": "=/app/output/tradingview_{{ $json.interval || '1D' }}_chart_{{ $json.ticker.replace(':', '_') }}.png"
+        "path": "=/home/pi/tradingview-screenshot/charts/tradingview_{{ $json.interval || '1D' }}_chart_{{ $json.ticker.replace(':', '_') }}.png"
       },
       "id": "ssh-download-chart",
       "name": "Download Chart",
@@ -57,5 +57,5 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "notes": "## TradingView Chart Generator (No Indicators)\n\n### Input JSON:\n```json\n{\n  \"ticker\": \"NASDAQ:AAPL\",\n  \"interval\": \"1D\"\n}\n```\n\n### SSH Credentials:\n- Host: <raspi-ip>\n- Port: 2222\n- Username: root\n- Password: Home4Charts8115$\n\n### Intervals:\n- 15m, 1h, 4h, 1D, 1W"
+  "notes": "## TradingView Chart Generator (No Indicators)\n\n### Input JSON:\n```json\n{\n  \"ticker\": \"NASDAQ:AAPL\",\n  \"interval\": \"1D\"\n}\n```\n\n### SSH Credentials:\n- Host: <raspi-ip>\n- Port: 2222\n- Username: root\n- Password: (set via ROOT_PASSWORD env var)\n\n### Intervals (case-insensitive):\n- 15m, 1h, 4h, 1D, 1W"
 }
