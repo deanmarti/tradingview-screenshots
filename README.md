@@ -33,14 +33,15 @@ python src/tradingview_screenshot.py NASDAQ:AAPL -i 1h -s BB,VWAP,RSI
 
 1. Create directories on host:
    ```bash
-   mkdir -p /home/pi/tradingview-screenshots/charts
-   mkdir -p /home/pi/tradingview-screenshots/archives
+   mkdir -p /home/pi/tradingview-screenshot/charts
+   mkdir -p /home/pi/tradingview-screenshot/archives
    ```
 
 2. Deploy via Portainer:
    - Go to **Stacks** > **Add Stack**
    - Select **Repository** and enter your Git URL
    - Set **Compose path**: `docker/docker-compose.yml`
+   - Add **Environment variable**: `ROOT_PASSWORD` = `your_password`
    - Click **Deploy**
 
 3. Generate charts via SSH:
@@ -55,9 +56,11 @@ See [docker/DEPLOYMENT.md](docker/DEPLOYMENT.md) for detailed deployment instruc
 | Option | Description | Default |
 |--------|-------------|---------|
 | `TICKER` | Stock symbol (e.g., NASDAQ:AAPL, NYSE:IBM) | Required |
-| `-i, --interval` | Time interval: 15m, 1h, 4h, 1D, 1W | 1D |
+| `-i, --interval` | Time interval: 15m, 1h, 4h, 1D, 1W (case-insensitive) | 1D |
 | `-s, --studies` | Technical indicators (optional value) | None |
 | `-o, --output` | Output directory | Current directory |
+
+**Note:** Intervals are case-insensitive. `15m`, `15M`, `1h`, `1H`, `4h`, `4H`, `1d`, `1D`, `1w`, `1W` all work.
 
 ### Indicator Examples
 
@@ -89,7 +92,7 @@ Any TradingView study name is supported (e.g., `Volume`, `VWMA`, `Momentum`).
 ## Project Structure
 
 ```
-tradingview-screenshots/
+tradingview-screenshot/
 ├── src/
 │   └── tradingview_screenshot.py    # Main Python script
 ├── docker/
