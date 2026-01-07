@@ -18,3 +18,7 @@ venv/
 Thumbs.db
 desktop.ini
 nul
+
+# Environment files (contain secrets)
+.env
+!.env.example

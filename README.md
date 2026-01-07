@@ -98,7 +98,9 @@ tradingview-screenshots/
 │   ├── requirements.txt             # Python dependencies
 │   ├── archive_charts.sh            # Weekly archive script
 │   ├── entrypoint.sh                # Container startup script
-│   └── DEPLOYMENT.md                # Deployment guide
+│   ├── DEPLOYMENT.md                # Deployment guide
+│   ├── .env.example                 # Environment template
+│   └── .env                         # Environment config (not in git)
 ├── n8n/
 │   ├── n8n_node_chart_normal.json   # n8n workflow (no indicators)
 │   └── n8n_node_chart_indicators.json
@@ -120,11 +122,20 @@ Example: `tradingview_4h_chart_NASDAQ_AAPL_indicators.png`
 
 ## Docker Configuration
 
+Copy the environment template and configure:
+
+```bash
+cp docker/.env.example docker/.env
+```
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ROOT_PASSWORD` | SSH root password | (set in .env) |
+| `TZ` | Container timezone | Europe/Berlin |
+
 | Setting | Default | Description |
 |---------|---------|-------------|
 | SSH Port | 2222 | External SSH port |
-| Password | Home4Charts8115$ | Root password (change in production) |
-| Timezone | Europe/Berlin | Container timezone |
 | Archive Schedule | Sunday 23:30 | Weekly archive cron |
 
 ## Requirements

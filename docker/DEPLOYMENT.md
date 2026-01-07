@@ -78,13 +78,17 @@ services:
     volumes:
       - /home/pi/tradingview-screenshots/charts:/app/output
       - /home/pi/tradingview-screenshots/archives:/app/archives
+    env_file:
+      - .env
     environment:
-      - ROOT_PASSWORD=Home4Charts8115$
-      - TZ=Europe/Berlin
+      - ROOT_PASSWORD=${ROOT_PASSWORD}
+      - TZ=${TZ}
     shm_size: '2gb'
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
 ```
+
+**Note:** Create a `.env` file in the `docker/` directory (see `.env.example` for template).
 
 ---
 
@@ -167,14 +171,22 @@ ssh -p 2222 root@<raspi-ip> "cat /var/log/cron.log"
 
 ## Configuration
 
+### Environment Variables
+
+Configuration is stored in `docker/.env`. Copy the example file and customize:
+
+```bash
+cp docker/.env.example docker/.env
+nano docker/.env
+```
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ROOT_PASSWORD` | SSH root password | (set in .env) |
+| `TZ` | Container timezone | Europe/Berlin |
+
 ### SSH Port
 Default: `2222` (change in `docker-compose.yml` under `ports`)
-
-### Root Password
-Default: `Home4Charts8115$` (change via `ROOT_PASSWORD` environment variable)
-
-### Timezone
-Default: `Europe/Berlin` (change via `TZ` environment variable)
 
 ---
 
