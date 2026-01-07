@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  tradingview-screenshot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: tradingview-screenshot:latest
+    container_name: tradingview-screenshot
+    hostname: tradingview-screenshot
+    restart: unless-stopped
+    ports:
+      - "2222:22"  # SSH port
+    volumes:
+      - /home/pi/tradingview-screenshots/charts:/app/output          # Chart output
+      - /home/pi/tradingview-screenshots/archives:/app/archives      # Weekly zip archives
+    environment:
+      - ROOT_PASSWORD=Home4Charts8115$
+      - TZ=Europe/Berlin
+    shm_size: '2gb'  # Required for Chrome headless
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"

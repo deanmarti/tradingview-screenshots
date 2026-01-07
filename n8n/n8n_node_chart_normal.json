@@ -1,0 +1,61 @@
+{
+  "name": "TradingView Chart (No Indicators)",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeCommand",
+        "command": "=tradingview-screenshot {{ $json.ticker }} -i {{ $json.interval || '1D' }} -s \"\"",
+        "cwd": "/app"
+      },
+      "id": "ssh-execute-chart",
+      "name": "Generate Chart",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "credentials": {
+        "sshPassword": {
+          "id": "YOUR_SSH_CREDENTIAL_ID",
+          "name": "TradingView Container SSH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "=/app/output/tradingview_{{ $json.interval || '1D' }}_chart_{{ $json.ticker.replace(':', '_') }}.png"
+      },
+      "id": "ssh-download-chart",
+      "name": "Download Chart",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "credentials": {
+        "sshPassword": {
+          "id": "YOUR_SSH_CREDENTIAL_ID",
+          "name": "TradingView Container SSH"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Generate Chart": {
+      "main": [
+        [
+          {
+            "node": "Download Chart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "notes": "## TradingView Chart Generator (No Indicators)\n\n### Input JSON:\n```json\n{\n  \"ticker\": \"NASDAQ:AAPL\",\n  \"interval\": \"1D\"\n}\n```\n\n### SSH Credentials:\n- Host: <raspi-ip>\n- Port: 2222\n- Username: root\n- Password: Home4Charts8115$\n\n### Intervals:\n- 15m, 1h, 4h, 1D, 1W"
+}
