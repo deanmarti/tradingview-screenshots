@@ -14,11 +14,9 @@ services:
     volumes:
       - /home/pi/tradingview-screenshots/charts:/app/output          # Chart output
       - /home/pi/tradingview-screenshots/archives:/app/archives      # Weekly zip archives
-    env_file:
-      - .env
     environment:
-      - ROOT_PASSWORD=${ROOT_PASSWORD}
-      - TZ=${TZ}
+      - ROOT_PASSWORD=${ROOT_PASSWORD:-changeme}
+      - TZ=${TZ:-Europe/Berlin}
     shm_size: '2gb'  # Required for Chrome headless
     labels:
       - "com.centurylinklabs.watchtower.enable=false"

@@ -35,7 +35,10 @@ mkdir -p /home/pi/tradingview-screenshots/archives
 3. Select **Repository**
 4. Enter your Git repository URL
 5. Set **Compose path**: `docker/docker-compose.yml`
-6. Click **Deploy the stack**
+6. Scroll down to **Environment variables** and add:
+   - `ROOT_PASSWORD` = `your_secure_password`
+   - `TZ` = `Europe/Berlin` (optional)
+7. Click **Deploy the stack**
 
 ### Option 2: Upload Files
 
@@ -78,17 +81,17 @@ services:
     volumes:
       - /home/pi/tradingview-screenshots/charts:/app/output
       - /home/pi/tradingview-screenshots/archives:/app/archives
-    env_file:
-      - .env
     environment:
-      - ROOT_PASSWORD=${ROOT_PASSWORD}
-      - TZ=${TZ}
+      - ROOT_PASSWORD=${ROOT_PASSWORD:-changeme}
+      - TZ=${TZ:-Europe/Berlin}
     shm_size: '2gb'
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
 ```
 
-**Note:** Create a `.env` file in the `docker/` directory (see `.env.example` for template).
+4. Add **Environment variables** below the editor:
+   - `ROOT_PASSWORD` = `your_secure_password`
+5. Click **Deploy the stack**
 
 ---
 
@@ -173,17 +176,14 @@ ssh -p 2222 root@<raspi-ip> "cat /var/log/cron.log"
 
 ### Environment Variables
 
-Configuration is stored in `docker/.env`. Copy the example file and customize:
-
-```bash
-cp docker/.env.example docker/.env
-nano docker/.env
-```
+Set these in Portainer's **Environment variables** section when deploying:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `ROOT_PASSWORD` | SSH root password | (set in .env) |
+| `ROOT_PASSWORD` | SSH root password | changeme |
 | `TZ` | Container timezone | Europe/Berlin |
+
+For local development, create a `.env` file (see `.env.example`).
 
 ### SSH Port
 Default: `2222` (change in `docker-compose.yml` under `ports`)
