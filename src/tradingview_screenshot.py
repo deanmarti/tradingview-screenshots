@@ -216,8 +216,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate TradingView chart screenshot for a given stock ticker')
     parser.add_argument('ticker_symbol', type=str, help='Stock ticker symbol (e.g., AAPL or NASDAQ:AAPL)')
     parser.add_argument('-i', '--interval', type=str, default='1D',
-                        choices=['15m', '1h', '4h', '1D', '1W'],
-                        help='Chart interval (default: 1D)')
+                        help='Chart interval: 15m, 1h, 4h, 1D, 1W (default: 1D)')
     parser.add_argument('-s', '--studies', type=str, nargs='?', default=None, const='MACD,RSI',
                         help='Comma-separated indicators: MACD,RSI,DMI (default if -s provided: MACD,RSI)')
     parser.add_argument('-o', '--output', type=str, default=None,
@@ -226,6 +225,23 @@ if __name__ == '__main__':
 
     # Convert ticker to uppercase
     ticker_symbol = args.ticker_symbol.strip().upper()
+
+    # Normalize interval (case-insensitive)
+    interval_map = {"15M": "15m", "1H": "1h", "4H": "4h", "1D": "1D", "1W": "1W"}
+    interval = args.interval.upper()
+    if interval in interval_map:
+        interval = interval_map[interval]
+    elif interval.lower() in INTERVAL_CONFIG:
+        interval = interval.lower()
+    else:
+        # Check if it matches any key case-insensitively
+        for key in INTERVAL_CONFIG:
+            if key.upper() == interval:
+                interval = key
+                break
+        else:
+            print(f"Error: Invalid interval '{args.interval}'. Choose from: 15m, 1h, 4h, 1D, 1W", file=sys.stderr)
+            sys.exit(1)
 
     # Parse studies from comma-separated string (None if not provided)
     studies = []
@@ -238,7 +254,7 @@ if __name__ == '__main__':
         os.makedirs(output_dir, exist_ok=True)
 
     try:
-        exit_code = create_tradingview_chart(ticker_symbol, args.interval, studies, output_dir)
+        exit_code = create_tradingview_chart(ticker_symbol, interval, studies, output_dir)
         sys.exit(exit_code)
     except Exception as e:
         print(f"Error: {e}")
