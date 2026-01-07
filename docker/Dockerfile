@@ -37,9 +37,7 @@ RUN mkdir -p /var/run/sshd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
-# Set root password from environment variable (default provided, override in docker-compose)
-ARG ROOT_PASSWORD=Home4Charts8115$
-RUN echo "root:${ROOT_PASSWORD}" | chpasswd
+# Root password is set at runtime via entrypoint.sh using ROOT_PASSWORD env var
 
 # Create wrapper script for easy execution (default output to /app/output)
 RUN echo '#!/bin/bash\n/app/venv/bin/python /app/tradingview_screenshot.py -o /app/output "$@"' > /usr/local/bin/tradingview-screenshot \
