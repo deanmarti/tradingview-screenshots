@@ -51,6 +51,73 @@ python src/tradingview_screenshot.py NASDAQ:AAPL -i 1h -s BB,VWAP,RSI
 
 See [docker/DEPLOYMENT.md](docker/DEPLOYMENT.md) for detailed deployment instructions.
 
+## REST API
+
+The tool includes a FastAPI-based REST API for programmatic access.
+
+### API Setup
+
+1. Create a `key.md` file in the project root with your API key:
+   ```bash
+   echo "YourSecretAPIKey123" > key.md
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r docker/requirements.txt
+   ```
+
+3. Start the API server:
+   ```bash
+   cd src
+   python -m uvicorn api:app --host 0.0.0.0 --port 8000
+   ```
+
+### API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/health` | No | Health check |
+| GET | `/api/intervals` | Yes | List available intervals |
+| GET | `/api/indicators` | Yes | List indicator shortcuts |
+| POST | `/api/chart/generate` | Yes | Generate chart screenshot |
+| GET | `/api/chart/download/{filename}` | Yes | Download chart file |
+| GET | `/api/chart/list` | Yes | List generated charts |
+| GET | `/api/archive/list` | Yes | List archives |
+| POST | `/api/archive/trigger` | Yes | Trigger manual archive |
+| GET | `/api/archive/download/{filename}` | Yes | Download archive |
+
+### Authentication
+
+All endpoints (except `/health`) require a Bearer token in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer YourSecretAPIKey123" http://localhost:8000/api/intervals
+```
+
+### Example: Generate Chart
+
+```bash
+curl -X POST http://localhost:8000/api/chart/generate \
+  -H "Authorization: Bearer YourSecretAPIKey123" \
+  -H "Content-Type: application/json" \
+  -d '{"ticker": "NASDAQ:AAPL", "interval": "1D", "studies": ["MACD", "RSI"]}'
+```
+
+Response:
+```json
+{
+  "success": true,
+  "filename": "tradingview_1D_chart_NASDAQ_AAPL_indicators.png",
+  "html_filename": "tradingview_1D_chart_NASDAQ_AAPL_indicators.html",
+  "message": "Chart generated successfully"
+}
+```
+
+### Interactive API Docs
+
+Swagger UI available at: `http://localhost:8000/docs`
+
 ## Command Line Options
 
 | Option | Description | Default |
@@ -94,7 +161,8 @@ Any TradingView study name is supported (e.g., `Volume`, `VWMA`, `Momentum`).
 ```
 tradingview-screenshot/
 ├── src/
-│   └── tradingview_screenshot.py    # Main Python script
+│   ├── tradingview_screenshot.py    # Main Python script (CLI)
+│   └── api.py                       # FastAPI REST API
 ├── docker/
 │   ├── Dockerfile                   # Container build instructions
 │   ├── docker-compose.yml           # Stack configuration
@@ -107,6 +175,7 @@ tradingview-screenshot/
 ├── n8n/
 │   ├── n8n_node_chart_normal.json   # n8n workflow (no indicators)
 │   └── n8n_node_chart_indicators.json
+├── key.md                           # API key (not in git)
 ├── spec.md                          # Project specification
 └── README.md
 ```
@@ -147,6 +216,7 @@ cp docker/.env.example docker/.env
 - Chrome/Chromium browser
 - ChromeDriver
 - Selenium
+- FastAPI + Uvicorn (for REST API)
 
 ## License
 
