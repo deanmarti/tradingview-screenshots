@@ -22,3 +22,6 @@ nul
 # Environment files (contain secrets)
 .env
 !.env.example
+
+# API keys (secrets)
+key.md
