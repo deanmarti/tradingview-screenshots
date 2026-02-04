@@ -31,10 +31,11 @@ python src/tradingview_screenshot.py NASDAQ:AAPL -i 1h -s BB,VWAP,RSI
 
 ### Docker Deployment (Raspberry Pi)
 
-1. Create directories on host:
+1. Create directories and API key file on host:
    ```bash
    mkdir -p /home/pi/tradingview-screenshot/charts
    mkdir -p /home/pi/tradingview-screenshot/archives
+   echo "YourSecretAPIKey123" > /home/pi/tradingview-screenshot/key.md
    ```
 
 2. Deploy via Portainer:
@@ -47,6 +48,12 @@ python src/tradingview_screenshot.py NASDAQ:AAPL -i 1h -s BB,VWAP,RSI
 3. Generate charts via SSH:
    ```bash
    ssh -p 2222 root@<raspi-ip> "tradingview-screenshot NASDAQ:AAPL -i 1D"
+   ```
+
+4. Access the REST API (auto-started on port 8000):
+   ```bash
+   curl http://<raspi-ip>:8000/health
+   curl -H "Authorization: Bearer YourSecretAPIKey123" http://<raspi-ip>:8000/api/intervals
    ```
 
 See [docker/DEPLOYMENT.md](docker/DEPLOYMENT.md) for detailed deployment instructions.
@@ -208,6 +215,7 @@ cp docker/.env.example docker/.env
 | Setting | Default | Description |
 |---------|---------|-------------|
 | SSH Port | 2222 | External SSH port |
+| API Port | 8000 | FastAPI REST API port |
 | Archive Schedule | Sunday 23:30 | Weekly archive cron |
 
 ## Requirements

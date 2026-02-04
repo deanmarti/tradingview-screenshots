@@ -22,6 +22,7 @@ WORKDIR /app
 
 # Copy application files
 COPY src/tradingview_screenshot.py /app/
+COPY src/api.py /app/
 COPY docker/requirements.txt /app/
 COPY docker/archive_charts.sh /app/
 
@@ -54,8 +55,9 @@ RUN echo "30 23 * * 0 /app/archive_charts.sh >> /var/log/cron.log 2>&1" > /etc/c
 # Create log file for cron
 RUN touch /var/log/cron.log
 
-# Expose SSH port
+# Expose SSH and API ports
 EXPOSE 22
+EXPOSE 8000
 
 # Copy and set entrypoint script
 COPY docker/entrypoint.sh /app/

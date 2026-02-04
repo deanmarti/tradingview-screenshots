@@ -10,10 +10,12 @@ services:
     hostname: tradingview-screenshot
     restart: unless-stopped
     ports:
-      - "2222:22"  # SSH port
+      - "2222:22"    # SSH port
+      - "8000:8000"  # FastAPI port
     volumes:
       - /home/pi/tradingview-screenshot/charts:/home/pi/tradingview-screenshot/charts
       - /home/pi/tradingview-screenshot/archives:/home/pi/tradingview-screenshot/archives
+      - /home/pi/tradingview-screenshot/key.md:/app/key.md:ro  # API key (read-only)
     environment:
       - ROOT_PASSWORD=${ROOT_PASSWORD:-changeme}
       - TZ=${TZ:-Europe/Berlin}
