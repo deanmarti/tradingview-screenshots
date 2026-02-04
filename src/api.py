@@ -35,7 +35,11 @@ from tradingview_screenshot import (
 
 def load_api_key() -> str:
     """
-    Load API key from key.md file in project root.
+    Load API key from key.md file.
+
+    Checks multiple locations to support both local development and Docker:
+    1. Project root (parent of src/) - for local development
+    2. /app/key.md - for Docker container (mounted volume)
 
     The key.md file should contain only the API key (single line).
     This file is gitignored for security.
@@ -46,23 +50,25 @@ def load_api_key() -> str:
     Raises:
         RuntimeError: If key.md file is not found or is empty
     """
-    # Look for key.md in project root (parent of src/)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    key_file = os.path.join(project_root, "key.md")
+    # Check multiple locations for key.md
+    possible_paths = [
+        # Project root (parent of src/) - for local development
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "key.md"),
+        # Docker container path (mounted volume)
+        "/app/key.md",
+    ]
 
-    if not os.path.exists(key_file):
-        raise RuntimeError(
-            "key.md file not found in project root. "
-            "Create it with your API key before starting the server."
-        )
+    for key_file in possible_paths:
+        if os.path.exists(key_file):
+            with open(key_file, "r") as f:
+                api_key = f.read().strip()
+            if api_key:
+                return api_key
 
-    with open(key_file, "r") as f:
-        api_key = f.read().strip()
-
-    if not api_key:
-        raise RuntimeError("key.md file is empty. Add your API key to the file.")
-
-    return api_key
+    raise RuntimeError(
+        "key.md file not found. Create it with your API key. "
+        "For Docker: mount to /app/key.md or place in /home/pi/tradingview-screenshot/"
+    )
 
 
 # Load API key at startup
